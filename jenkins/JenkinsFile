@@ -14,13 +14,12 @@ pipeline {
             steps {
                 dir('bugtracker-backend') {
                     sh '''
-                       export GOCACHE=/tmp/.go-cache
+                    export GOCACHE=/tmp/.go-cache
     mkdir -p /tmp/.go-cache
     
-    # Install compatible gotestsum version for Go 1.21
+    # Install Go 1.21 compatible version
     go install gotest.tools/gotestsum@v1.11.0
     
-    # Run tests and generate JUnit XML
     gotestsum --junitfile test-results.xml --format testname -- -v ./...
                     '''
                 }
