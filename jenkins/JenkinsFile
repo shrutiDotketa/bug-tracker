@@ -60,11 +60,13 @@ pipeline {
             steps {
                 dir('bugtracker-frontend') {
                     sh '''
-                        npm ci
-                        npm test
+                      npm ci
+    npm test
 
-                        mkdir -p reports
-                        mv coverage reports/
+    rm -rf reports
+    mkdir -p reports
+
+    cp -r coverage/. reports/
                     '''
                 }
             }
@@ -72,12 +74,12 @@ pipeline {
             post {
                 always {
                     publishHTML target: [
-                        reportDir: 'bugtracker-frontend/reports/coverage',
-                        reportFiles: 'index.html',
-                        reportName: 'Frontend Coverage Report',
-                        keepAll: true,
-                        alwaysLinkToLastBuild: true,
-                        allowMissing: true
+                         reportDir: 'bugtracker-frontend/reports',
+    reportFiles: 'index.html',
+    reportName: 'Frontend Coverage Report',
+    keepAll: true,
+    alwaysLinkToLastBuild: true,
+    allowMissing: false
                     ]
                 }
             }
