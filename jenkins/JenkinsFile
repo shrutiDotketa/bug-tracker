@@ -7,24 +7,23 @@ pipeline {
                 docker {
                     image 'snakee/golang-junit:1.21'
                     reuseNode true
+                    args '-u root'
                 }
             }
 
             steps {
                 dir('bugtracker-backend') {
                     sh '''
-                 export GOCACHE=/tmp/.go-cache
+                        export GOCACHE=/tmp/.go-cache
                         export GOPATH=/tmp/go
                         mkdir -p $GOCACHE $GOPATH
-                        chmod 777 /go/pkg/mod/cache 2>/dev/null || true
-                        go test -v ./...
+                        
+                        # Install gotestsum to convert Go tests to JUnit XML
+                        go install gotest.tools/gotestsum@latest
+                        
+                        # Run tests and generate JUnit XML
+                        gotestsum --junitfile test-results.xml --format testname -- -v ./...
                     '''
-                }
-            }
-
-            post() {
-                always {
-                    junit 'bugtracker-backend/test-results.xml'
                 }
             }
         }
@@ -40,16 +39,16 @@ pipeline {
                 dir('bugtracker-frontend') {
                     sh '''
                     npm ci
-                    npm test
+                    npm test -- --coverage --watchAll=false
                     '''
                 }
             }
-
-            post() {
-                always {
-                    junit 'bugtracker-frontend/test-results.xml'
-                }
-            }
+        }
+    }
+    
+    post {
+        always {
+            junit 'bugtracker-backend/test-results.xml'
         }
     }
 }
