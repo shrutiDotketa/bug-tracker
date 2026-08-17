@@ -16,12 +16,27 @@ pipeline {
                     sh '''
                     export GOCACHE=/tmp/.go-cache
     mkdir -p /tmp/.go-cache
-    
-    # Install Go 1.21 compatible version
     go install gotest.tools/gotestsum@v1.11.0
     
     gotestsum --junitfile test-results.xml --format testname -- -v ./...
+
+    go test -coverprofile=coverage.out -covermode=atomic ./...
+    go tool cover -html=coverage.out -o coverage.html
+
+    mkdir -p reports
+    mv coverage.html reports/
                     '''
+                }
+            }
+
+            post {
+                always {
+                    junit 'bugtracker-backend/test-results.xml'
+                    publishHTML target: [
+                        reportDir: 'bugtracker-backend/reports',
+                        reportFiles: 'coverage.html',
+                        reportName: 'Backend Coverage Report'
+                    ]
                 }
             }
         }
