@@ -2,6 +2,8 @@ FROM jenkins/jenkins:lts-jdk17
 
 USER root
 
+ENV GOCACHE=/tmp/.cache/go-build
+
 RUN apt-get update && apt-get install -y lsb-release
 
 RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
