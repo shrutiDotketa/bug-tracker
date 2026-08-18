@@ -22,7 +22,7 @@ on:
             - name: Execute Backend Unit tests
               working-directory: ./bugtracker-backend
               run: |
-              go test -v ./...
+               go test -v ./...
 
 
         
