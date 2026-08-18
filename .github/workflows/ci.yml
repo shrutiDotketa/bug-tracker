@@ -206,11 +206,3 @@ jobs:
           name: Performance HTML Report
           path: perf-results.html
           retention-days: 7
-
-      - name: Publish Performance test results
-        uses: dorny/test-reporter@v1
-        if: always()
-        with:
-          name: Performance Test Report
-          path: ./tests-perf/test-results/*.xml
-          reporter: jest-junit
