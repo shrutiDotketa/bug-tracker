@@ -74,4 +74,33 @@ jobs:
           name: Frontend Unit Test Report
           path: ./bugtracker-frontend/test-results.xml
           reporter: jest-junit
-        
+
+api-tests:
+  needs: [unit-tests-backend, unit-tests-frontend]
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Launch Application Services
+      run: |
+        docker-compose up -d --build
+        npm wait-port http://localhost:8080/api/health -t 30000
+
+    - name: Execute API tests
+      working-directory: ./tests-api
+      run: |
+        npm ci
+        npm playwright test
+
+    - name: Shut down Application Services
+      run: |
+        docker-compose down
+
+    - name: Upload API test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: API Test Results
+        path: ./tests-api/test-results/
+        retention-days: 7
