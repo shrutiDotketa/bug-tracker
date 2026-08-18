@@ -91,7 +91,7 @@ jobs:
         working-directory: ./tests-api
         run: |
           npm ci
-          npm playwright test
+          npx playwright test
 
       - name: Execute E2E tests
         working-directory: ./tests-e2e
@@ -99,8 +99,8 @@ jobs:
           CI: "1"
         run: |
           npm ci
-          npm playwright install
-          npm playwright test          
+          npx playwright install
+          npx playwright test          
 
       - name: Shut down Application Services
         run: |
