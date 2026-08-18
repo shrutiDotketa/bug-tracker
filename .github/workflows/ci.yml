@@ -84,7 +84,7 @@ jobs:
 
       - name: Launch Application Services
         run: |
-          docker-compose up -d --build
+          docker compose up -d --build
           npm wait-port http://localhost:8080/api/health -t 30000
 
       - name: Execute API tests
@@ -95,7 +95,7 @@ jobs:
 
       - name: Shut down Application Services
         run: |
-          docker-compose down
+          docker compose down
 
       - name: Upload API test results
         uses: actions/upload-artifact@v4
