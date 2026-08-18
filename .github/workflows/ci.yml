@@ -123,13 +123,29 @@ jobs:
           path: ./tests-api/test-results/
           retention-days: 7
 
-      - name: Upload E2E test results`
+      - name: Upload E2E test results
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: E2E Test Results
           path: ./tests-e2e/test-results/
-          retention-days: 7          
+          retention-days: 7      
+
+      - name: Upload performance raw results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Performance Raw Results
+          path: summary.json
+          retention-days: 7     
+
+      - name: Upload performance HTML report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Performance HTML Report
+          path: perf-results.html
+          retention-days: 7
 
       - name: Upload API Test Playwright Report
         uses: actions/upload-artifact@v4
